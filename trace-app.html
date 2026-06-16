@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRACE by Michelin — Roule sur la bonne gomme</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tarmac:#16181D;
+    --tarmac-2:#1E2128;
+    --ink:#1B1D21;
+    --paper:#F5F3EE;
+    --card:#FFFFFF;
+    --blue:#16306B;
+    --blue-2:#1E3F8A;
+    --yellow:#FFD200;
+    --yellow-deep:#E6BD00;
+    --mist:#E5E1D6;
+    --line:#DCD7C9;
+    --grey:#6B6E76;
+    --green:#16A07A;
+    --red:#E0483B;
+    --shadow:0 1px 2px rgba(20,22,26,.06),0 8px 24px rgba(20,22,26,.07);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--tarmac);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    display:flex;justify-content:center;
+  }
+  /* phone shell */
+  .phone{
+    width:100%;max-width:430px;min-height:100vh;
+    background:var(--paper);
+    position:relative;display:flex;flex-direction:column;
+    box-shadow:0 0 80px rgba(0,0,0,.5);
+    overflow:hidden;
+  }
+  .mono{font-family:'Space Mono',monospace}
+  .display{font-family:'Space Grotesk',sans-serif}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    background:var(--tarmac);color:#fff;
+    padding:14px 18px 12px;
+    display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:30;
+  }
+  .brand{display:flex;align-items:center;gap:9px}
+  .brand .logo{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--yellow);
+    display:grid;place-items:center;
+    font-family:'Space Grotesk';font-weight:700;color:var(--tarmac);font-size:15px;
+  }
+  .brand b{font-family:'Space Grotesk';font-weight:700;letter-spacing:.14em;font-size:15px}
+  .brand b span{color:var(--yellow)}
+  .topbar .tag{font-size:10px;color:#9CA0A8;letter-spacing:.12em;text-transform:uppercase}
+
+  /* ---------- screen frame ---------- */
+  .screen{flex:1;overflow-y:auto;padding-bottom:96px}
+  .screen::-webkit-scrollbar{width:0}
+  .pad{padding:20px 18px}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);font-weight:600;font-family:'Space Mono'}
+  h1.title{font-family:'Space Grotesk';font-weight:700;font-size:27px;line-height:1.08;letter-spacing:-.01em;margin:6px 0 4px}
+  .sub{color:var(--grey);font-size:14px;line-height:1.5}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    appearance:none;border:none;cursor:pointer;font-family:'Inter';font-weight:600;font-size:15px;
+    border-radius:12px;padding:14px 18px;width:100%;transition:transform .08s ease, filter .15s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--tarmac);color:#fff}
+  .btn-primary:hover{filter:brightness(1.15)}
+  .btn-yellow{background:var(--yellow);color:var(--tarmac)}
+  .btn-yellow:hover{filter:brightness(1.04)}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+  .btn-sm{width:auto;padding:10px 16px;font-size:13px;border-radius:10px}
+
+  /* ---------- hero (home) ---------- */
+  .hero{
+    background:linear-gradient(160deg,var(--blue) 0%,#0F2350 100%);
+    color:#fff;border-radius:18px;padding:22px 20px 20px;position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-40px;bottom:-60px;width:180px;height:180px;border-radius:50%;
+    background:repeating-radial-gradient(circle at center,transparent 0 7px,rgba(255,255,255,.06) 7px 9px);
+    opacity:.6;
+  }
+  .hero .eyebrow{color:var(--yellow)}
+  .hero h2{font-family:'Space Grotesk';font-weight:700;font-size:23px;line-height:1.12;margin:8px 0 6px;max-width:80%}
+  .hero p{font-size:13.5px;color:#C6D0E6;max-width:88%;line-height:1.5}
+  .hero .cta-row{display:flex;gap:10px;margin-top:16px}
+
+  /* stat strip */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+  .stat .n{font-family:'Space Grotesk';font-weight:700;font-size:21px}
+  .stat .n.y{color:var(--yellow-deep)}
+  .stat .l{font-size:10.5px;color:var(--grey);letter-spacing:.04em;text-transform:uppercase;margin-top:2px}
+
+  .section-h{display:flex;align-items:baseline;justify-content:space-between;margin:24px 0 12px}
+  .section-h h3{font-family:'Space Grotesk';font-weight:600;font-size:17px}
+  .section-h a{font-size:12px;color:var(--blue);font-weight:600;text-decoration:none}
+
+  /* garage tyre card */
+  .tyre-row{display:flex;gap:14px;align-items:center;padding:16px}
+  .tyre-thumb{
+    width:54px;height:54px;border-radius:12px;background:var(--tarmac);flex:0 0 auto;
+    display:grid;place-items:center;position:relative;overflow:hidden;
+  }
+  .tyre-thumb::before{
+    content:"";position:absolute;inset:8px;border-radius:50%;
+    border:6px solid #2A2D34;
+    background:repeating-conic-gradient(from 0deg,#3A3D44 0 6deg,#2A2D34 6deg 12deg);
+  }
+  .tyre-meta{flex:1;min-width:0}
+  .tyre-meta .nm{font-family:'Space Grotesk';font-weight:600;font-size:15px}
+  .tyre-meta .bk{font-size:12px;color:var(--grey)}
+  /* wear gauge */
+  .gauge{display:flex;align-items:center;gap:10px;margin-top:8px}
+  .bar{flex:1;height:8px;border-radius:99px;background:var(--mist);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px}
+  .wear-val{font-family:'Space Mono';font-size:12px;font-weight:700}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;font-family:'Space Mono'}
+  .pill.alert{background:#FCE9E7;color:var(--red)}
+  .pill.ok{background:#E4F4EE;color:var(--green)}
+  .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+  /* reorder nudge */
+  .nudge{
+    background:linear-gradient(135deg,var(--yellow) 0%,#FFDE57 100%);
+    border-radius:16px;padding:16px 16px 14px;position:relative;overflow:hidden;margin-top:14px;
+  }
+  .nudge .k{font-family:'Space Mono';font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#7A6500;font-weight:700}
+  .nudge h4{font-family:'Space Grotesk';font-weight:700;font-size:16px;margin:5px 0 3px;color:var(--tarmac)}
+  .nudge p{font-size:12.5px;color:#5C5326;line-height:1.45;margin-bottom:12px;max-width:90%}
+
+  /* ---------- match flow ---------- */
+  .progress{display:flex;gap:6px;padding:0 18px;margin-top:6px}
+  .progress i{flex:1;height:4px;border-radius:99px;background:var(--mist)}
+  .progress i.on{background:var(--tarmac)}
+  .q-title{font-family:'Space Grotesk';font-weight:700;font-size:22px;line-height:1.15;margin:18px 0 4px;letter-spacing:-.01em}
+  .q-sub{color:var(--grey);font-size:13.5px;margin-bottom:18px}
+  .opt{
+    width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;
+    padding:15px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:13px;
+    transition:border-color .12s,background .12s;font-family:'Inter';
+  }
+  .opt:hover{border-color:var(--blue)}
+  .opt.sel{border-color:var(--tarmac);background:#FBFAF6;box-shadow:inset 0 0 0 1px var(--tarmac)}
+  .opt .ic{font-size:22px;width:30px;text-align:center}
+  .opt .tx b{display:block;font-family:'Space Grotesk';font-weight:600;font-size:15px}
+  .opt .tx span{font-size:12px;color:var(--grey)}
+  .opt .chk{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto;display:grid;place-items:center}
+  .opt.sel .chk{background:var(--tarmac);border-color:var(--tarmac)}
+  .opt.sel .chk::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--yellow)}
+
+  /* result */
+  .result-card{background:var(--tarmac);color:#fff;border-radius:20px;overflow:hidden}
+  .result-hd{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:flex-start}
+  .matchscore{text-align:right}
+  .matchscore .n{font-family:'Space Grotesk';font-weight:700;font-size:34px;line-height:1;color:var(--yellow)}
+  .matchscore .l{font-family:'Space Mono';font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9CA0A8}
+  .result-tyre{font-family:'Space Grotesk';font-weight:700;font-size:25px;margin-top:14px;padding:0 20px;letter-spacing:-.01em}
+  .result-line{font-size:13px;color:#AEB3BD;padding:2px 20px 0}
+  .spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#2A2D34;margin:18px 0 0;border-top:1px solid #2A2D34}
+  .spec{background:var(--tarmac);padding:13px 14px}
+  .spec .l{font-family:'Space Mono';font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#7E828B}
+  .spec .v{font-family:'Space Grotesk';font-weight:600;font-size:15px;margin-top:3px}
+  .why{padding:16px 20px 4px}
+  .why .k{font-family:'Space Mono';font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--yellow);font-weight:700}
+  .why ul{list-style:none;margin-top:9px}
+  .why li{font-size:13px;color:#D5D8DE;line-height:1.45;padding-left:18px;position:relative;margin-bottom:7px}
+  .why li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--yellow)}
+  .buy-bar{padding:16px 20px 20px;display:flex;align-items:center;gap:14px}
+  .price{flex:1}
+  .price .p{font-family:'Space Grotesk';font-weight:700;font-size:24px}
+  .price .u{font-size:11px;color:#9CA0A8}
+
+  /* ---------- checkout ---------- */
+  .retailer{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .retailer:last-child{border-bottom:none}
+  .r-logo{width:42px;height:42px;border-radius:10px;background:var(--mist);display:grid;place-items:center;font-family:'Space Grotesk';font-weight:700;color:var(--blue);font-size:15px;flex:0 0 auto}
+  .r-meta{flex:1}
+  .r-meta .nm{font-weight:600;font-size:14px}
+  .r-meta .st{font-size:11.5px;color:var(--green);font-family:'Space Mono';display:flex;align-items:center;gap:5px}
+  .r-price{text-align:right}
+  .r-price .p{font-family:'Space Grotesk';font-weight:700;font-size:16px}
+  .r-price .d{font-size:10.5px;color:var(--grey)}
+  .journey{display:flex;align-items:center;gap:6px;margin:14px 0 4px;padding:0 2px}
+  .journey .step{flex:1;text-align:center}
+  .journey .step .c{width:26px;height:26px;border-radius:50%;margin:0 auto 5px;display:grid;place-items:center;font-family:'Space Mono';font-weight:700;font-size:12px;background:var(--mist);color:var(--grey)}
+  .journey .step.done .c{background:var(--tarmac);color:var(--yellow)}
+  .journey .step.now .c{background:var(--yellow);color:var(--tarmac)}
+  .journey .step .l{font-size:9.5px;color:var(--grey);letter-spacing:.04em;text-transform:uppercase}
+  .journey .ln{height:2px;flex:0 0 16px;background:var(--mist);margin-bottom:18px}
+
+  .success-wrap{display:grid;place-items:center;text-align:center;padding:40px 24px}
+  .success-ring{width:84px;height:84px;border-radius:50%;background:var(--green);display:grid;place-items:center;margin-bottom:18px;animation:pop .4s ease}
+  @keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+  .success-ring svg{width:40px;height:40px}
+
+  /* ---------- community ---------- */
+  .feed-card{overflow:hidden;margin-bottom:14px}
+  .feed-img{height:130px;background:linear-gradient(135deg,#1E3F8A,#0F2350);position:relative;display:grid;place-items:end start;padding:14px}
+  .feed-img.gravel{background:linear-gradient(135deg,#5B4528,#2E2415)}
+  .feed-img.mtb{background:linear-gradient(135deg,#234B33,#11251A)}
+  .feed-img::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 18px,rgba(255,255,255,.03) 18px 20px)}
+  .feed-tag{position:relative;z-index:2;background:var(--yellow);color:var(--tarmac);font-family:'Space Mono';font-weight:700;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:6px}
+  .feed-body{padding:14px 16px 16px}
+  .feed-body h4{font-family:'Space Grotesk';font-weight:600;font-size:16px;margin-bottom:4px}
+  .feed-body p{font-size:12.5px;color:var(--grey);line-height:1.45;margin-bottom:12px}
+  .feed-foot{display:flex;align-items:center;justify-content:space-between}
+  .reward{font-family:'Space Mono';font-size:12px;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:5px}
+
+  /* ---------- bottom nav ---------- */
+  .nav{
+    position:absolute;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;
+    background:rgba(22,24,29,.97);backdrop-filter:blur(8px);
+    display:flex;justify-content:space-around;padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+    z-index:40;border-top:1px solid #2A2D34;
+  }
+  .nav button{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;color:#7E828B;font-family:'Inter';font-size:10px;font-weight:500}
+  .nav button svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8}
+  .nav button.on{color:var(--yellow)}
+  .nav .fab{
+    margin-top:-26px;background:var(--yellow);width:54px;height:54px;border-radius:50%;
+    display:grid;place-items:center;box-shadow:0 6px 16px rgba(255,210,0,.4);color:var(--tarmac);
+  }
+  .nav .fab svg{width:26px;height:26px;stroke-width:2.4}
+
+  .hidden{display:none}
+  .fade{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">T</div>
+      <b>TRACE<span>.</span></b>
+    </div>
+    <div class="tag" id="topctx">Bonjour, Théo</div>
+  </div>
+
+  <div class="screen" id="screen"></div>
+
+  <nav class="nav">
+    <button data-go="home" class="on" onclick="nav('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Accueil</button>
+    <button data-go="garage" onclick="nav('garage')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/></svg>Garage</button>
+    <button class="fab" onclick="nav('match')">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button data-go="shop" onclick="nav('shop')">
+      <svg viewBox="0 0 24 24"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Boutique</button>
+    <button data-go="ride" onclick="nav('ride')">
+      <svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3.4"/><circle cx="18" cy="17" r="3.4"/><path d="M6 17l4-8h5l3 8M10 9l2-4h3"/></svg>Communauté</button>
+  </nav>
+</div>
+
+<script>
+/* ============ DATA ============ */
+const TYRES = {
+  power_road:   {name:"Power Road",   line:"Route — Performance",   price:54.90, color:"#FFD200",
+    specs:{Usage:"Route",Profil:"Slick",Poids:"235 g"},
+    why:["Le meilleur compromis vitesse / longévité du catalogue route","Gomme bi-densité pour l'adhérence sur le sec comme sur le mouillé","Validé par les pros sur les classiques"]},
+  power_cup:    {name:"Power Cup",    line:"Route — Compétition",   price:64.90, color:"#E0483B",
+    specs:{Usage:"Course",Profil:"Slick",Poids:"215 g"},
+    why:["Rendement maximal pour le jour de course","Adhérence extrême en virage à haute vitesse","Choisi quand chaque watt compte"]},
+  lithion:      {name:"Lithion 4",    line:"Route — Endurance",     price:32.90, color:"#16A07A",
+    specs:{Usage:"Entraînement",Profil:"Slick",Poids:"270 g"},
+    why:["Résistance à la crevaison renforcée pour rouler sereinement","Longévité supérieure : idéal gros volumes d'entraînement","Le meilleur rapport km / euro"]},
+  power_gravel: {name:"Power Gravel",  line:"Gravel — Polyvalence",  price:49.90, color:"#C98A3A",
+    specs:{Usage:"Gravel",Profil:"Mixte",Poids:"420 g"},
+    why:["Crampons bas pour rouler vite sur chemins roulants","Flancs renforcés contre les coupures en terrain cassant","Du bitume à la piste sans compromis"]},
+  wild_xc:      {name:"Wild XC",       line:"VTT — Cross-country",   price:44.90, color:"#3A7D54",
+    specs:{Usage:"XC",Profil:"Crampons",Poids:"645 g"},
+    why:["Rapide et léger pour le cross-country et le marathon","Bonne accroche en montée sans pénaliser le roulement","Construction tubeless-ready"]},
+  wild_enduro:  {name:"Wild Enduro",   line:"VTT — Enduro / Gravity",price:59.90, color:"#234B33",
+    specs:{Usage:"Enduro",Profil:"Crampons+",Poids:"1230 g"},
+    why:["Accroche maximale dans les descentes engagées","Carcasse anti-pincement pour encaisser les chocs","Pensé pour le pilotage agressif"]},
+  protek:       {name:"Protek Max",    line:"Urbain — Fiabilité",    price:27.90, color:"#16306B",
+    specs:{Usage:"Ville",Profil:"Anti-crevaison",Poids:"720 g"},
+    why:["Ceinture anti-crevaison épaisse : zéro galère en trajet","Bande réfléchissante pour être vu de nuit","Conçu pour durer des milliers de km urbains"]},
+};
+
+const state = {
+  match:{discipline:null,terrain:null,priority:null,step:0},
+  cart:null,
+  garage:[
+    {tyre:"power_road", bike:"Specialized Tarmac SL7", wear:86, km:4120},
+    {tyre:"power_gravel", bike:"Canyon Grizl", wear:34, km:1650},
+  ],
+};
+
+/* ============ HELPERS ============ */
+const $ = s=>document.querySelector(s);
+const screen = ()=>$("#screen");
+function wearColor(w){ return w>=80?"var(--red)":w>=55?"var(--yellow-deep)":"var(--green)"; }
+function nav(view){
+  document.querySelectorAll('.nav button[data-go]').forEach(b=>b.classList.toggle('on',b.dataset.go===view));
+  state.match.step=0;
+  render(view);
+  screen().scrollTop=0;
+}
+
+/* ============ RENDER ROUTER ============ */
+function render(view){
+  const s=screen(); s.className="screen fade";
+  void s.offsetWidth; s.classList.add('fade');
+  if(view==='home') return renderHome();
+  if(view==='garage') return renderGarage();
+  if(view==='match') return renderMatch();
+  if(view==='shop') return renderShop();
+  if(view==='ride') return renderRide();
+  if(view==='checkout') return renderCheckout();
+  if(view==='success') return renderSuccess();
+}
+
+/* ============ HOME ============ */
+function renderHome(){
+  const alert = state.garage.find(g=>g.wear>=80);
+  const t = alert?TYRES[alert.tyre]:null;
+  screen().innerHTML = `
+  <div class="pad">
+    <div class="hero">
+      <div class="eyebrow">Roule sur la bonne gomme</div>
+      <h2>Le bon pneu Michelin, au bon moment.</h2>
+      <p>Trouve la gomme parfaite pour ton style, suis son usure, recommande en 2 clics.</p>
+      <div class="cta-row">
+        <button class="btn btn-yellow btn-sm" onclick="nav('match')">Trouver mon pneu</button>
+        <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="nav('garage')">Mon garage</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">${state.garage.reduce((a,g)=>a+g.km,0).toLocaleString('fr')}</div><div class="l">km suivis</div></div>
+      <div class="stat"><div class="n y">2</div><div class="l">pneus actifs</div></div>
+      <div class="stat"><div class="n">340</div><div class="l">points Trace</div></div>
+    </div>
+
+    ${alert?`
+    <div class="nudge" onclick="buy('${alert.tyre}')">
+      <div class="k">⚠ Réassort recommandé</div>
+      <h4>Ton ${t.name} arrive en fin de vie</h4>
+      <p>${alert.wear}% d'usure sur ton ${alert.bike}. Recommande maintenant pour être prêt ce week-end.</p>
+      <button class="btn btn-primary btn-sm" style="width:100%">Recommander — ${t.price.toFixed(2).replace('.',',')} €</button>
+    </div>`:''}
+
+    <div class="section-h"><h3>Découvre</h3><a onclick="nav('ride')">Tout voir</a></div>
+    ${feedCard('road','Défi','Challenge Print',"Roule 300 km ce mois-ci et débloque -15% sur ta prochaine gomme route.",'+50 pts')}
+  </div>`;
+}
+
+/* ============ GARAGE ============ */
+function renderGarage(){
+  screen().innerHTML = `
+  <div class="pad">
+    <div class="eyebrow">Mon garage</div>
+    <h1 class="title">Tes gommes, suivies.</h1>
+    <p class="sub">On estime l'usure à partir de tes km. Tu es prévenu avant la panne.</p>
+    <div style="height:18px"></div>
+    ${state.garage.map(g=>{
+      const t=TYRES[g.tyre]; const alert=g.wear>=80;
+      return `
+      <div class="card" style="margin-bottom:14px">
+        <div class="tyre-row">
+          <div class="tyre-thumb"></div>
+          <div class="tyre-meta">
+            <div class="nm">${t.name}</div>
+            <div class="bk">${g.bike} · ${g.km.toLocaleString('fr')} km</div>
+            <div class="gauge">
+              <div class="bar"><i style="width:${g.wear}%;background:${wearColor(g.wear)}"></i></div>
+              <span class="wear-val" style="color:${wearColor(g.wear)}">${g.wear}%</span>
+            </div>
+          </div>
+        </div>
+        <div style="padding:0 16px 16px;display:flex;align-items:center;justify-content:space-between">
+          <span class="pill ${alert?'alert':'ok'}"><span class="dot"></span>${alert?'À remplacer':'En bon état'}</span>
+          ${alert?`<button class="btn btn-yellow btn-sm" onclick="buy('${g.tyre}')">Recommander</button>`
+                  :`<button class="btn btn-ghost btn-sm" onclick="nav('match')">Comparer</button>`}
+        </div>
+      </div>`;
+    }).join('')}
+    <button class="btn btn-ghost" onclick="nav('match')" style="margin-top:4px">+ Ajouter un vélo</button>
+  </div>`;
+}
+
+/* ============ MATCH FLOW ============ */
+const Q = [
+  {key:'discipline', t:'Tu roules surtout en…', s:'On adapte la recommandation à ta pratique.',
+   opts:[
+     {v:'route',ic:'🚴',b:'Route',sub:'Vitesse, bitume, longues sorties'},
+     {v:'gravel',ic:'🌾',b:'Gravel',sub:'Chemins, polyvalence, aventure'},
+     {v:'vtt',ic:'⛰️',b:'VTT',sub:'Sentiers, descente, technique'},
+     {v:'ville',ic:'🏙️',b:'Urbain',sub:'Trajets quotidiens, fiabilité'},
+   ]},
+  {key:'terrain', t:'Ton terrain dominant ?', s:'Le sol détermine le grip dont tu as besoin.',
+   opts:[
+     {v:'sec',ic:'☀️',b:'Sec & roulant',sub:'Routes lisses, conditions sèches'},
+     {v:'mixte',ic:'⛅',b:'Mixte',sub:'Un peu de tout, toutes saisons'},
+     {v:'humide',ic:'🌧️',b:'Humide & cassant',sub:'Pluie, gravillons, terrain dur'},
+   ]},
+  {key:'priority', t:"Ta priorité n°1 ?", s:'Ce qui compte le plus pour toi.',
+   opts:[
+     {v:'vitesse',ic:'⚡',b:'Performance',sub:'Le rendement avant tout'},
+     {v:'durabilite',ic:'🛡️',b:'Durabilité',sub:'Rouler longtemps sans soucis'},
+     {v:'grip',ic:'🎯',b:'Adhérence',sub:'Sécurité et contrôle maximal'},
+   ]},
+];
+
+function recommend(){
+  const {discipline,terrain,priority}=state.match;
+  let key='power_road', score=88;
+  if(discipline==='route'){
+    key = priority==='vitesse'?'power_cup' : priority==='durabilite'?'lithion':'power_road';
+  } else if(discipline==='gravel'){ key='power_gravel'; }
+  else if(discipline==='vtt'){ key = priority==='vitesse'?'wild_xc':'wild_enduro'; }
+  else if(discipline==='ville'){ key='protek'; }
+  // score nudge for flavour
+  score = 90 + (terrain==='humide'&&priority==='grip'?7:terrain==='sec'&&priority==='vitesse'?6:3);
+  if(score>99) score=98;
+  return {key,score};
+}
+
+function renderMatch(){
+  if(state.match.step>=Q.length){ return renderMatchResult(); }
+  const q=Q[state.match.step];
+  const cur=state.match[q.key];
+  screen().innerHTML = `
+    <div style="padding-top:18px">
+      <div class="progress">${Q.map((_,i)=>`<i class="${i<=state.match.step?'on':''}"></i>`).join('')}</div>
+      <div class="pad">
+        <div class="eyebrow">Tyre Match · ${state.match.step+1}/${Q.length}</div>
+        <div class="q-title">${q.t}</div>
+        <div class="q-sub">${q.s}</div>
+        ${q.opts.map(o=>`
+          <button class="opt ${cur===o.v?'sel':''}" onclick="pick('${q.key}','${o.v}')">
+            <span class="ic">${o.ic}</span>
+            <span class="tx"><b>${o.b}</b><span>${o.sub}</span></span>
+            <span class="chk"></span>
+          </button>`).join('')}
+      </div>
+    </div>`;
+}
+function pick(key,val){
+  state.match[key]=val;
+  setTimeout(()=>{ state.match.step++; renderMatch(); screen().scrollTop=0; },180);
+}
+function renderMatchResult(){
+  const {key,score}=recommend(); const t=TYRES[key];
+  screen().innerHTML=`
+  <div class="pad">
+    <div class="eyebrow" style="color:var(--blue)">Ton Tyre Match</div>
+    <div style="height:12px"></div>
+    <div class="result-card">
+      <div class="result-hd">
+        <div><div class="mono" style="font-size:10px;letter-spacing:.12em;color:#7E828B;text-transform:uppercase">Recommandation Michelin</div></div>
+        <div class="matchscore"><div class="n">${score}%</div><div class="l">de compatibilité</div></div>
+      </div>
+      <div class="result-tyre">${t.name}</div>
+      <div class="result-line">${t.line}</div>
+      <div class="spec-grid">
+        ${Object.entries(t.specs).map(([l,v])=>`<div class="spec"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('')}
+      </div>
+      <div class="why">
+        <div class="k">Pourquoi cette gomme pour toi</div>
+        <ul>${t.why.map(w=>`<li>${w}</li>`).join('')}</ul>
+      </div>
+      <div class="buy-bar">
+        <div class="price"><div class="p">${t.price.toFixed(2).replace('.',',')} €</div><div class="u">à partir de · 4 e-revendeurs</div></div>
+        <button class="btn btn-yellow" style="width:auto;padding:14px 22px" onclick="buy('${key}')">Acheter</button>
+      </div>
+    </div>
+    <button class="btn btn-ghost" style="margin-top:14px" onclick="state.match.step=0;nav('match')">Recommencer le test</button>
+  </div>`;
+}
+
+/* ============ SHOP ============ */
+function renderShop(){
+  screen().innerHTML=`
+  <div class="pad">
+    <div class="eyebrow">Boutique</div>
+    <h1 class="title">La gamme vélo Michelin.</h1>
+    <p class="sub">Disponibilité en temps réel chez nos e-revendeurs partenaires.</p>
+    <div style="height:16px"></div>
+    ${Object.entries(TYRES).map(([k,t])=>`
+      <div class="card" style="margin-bottom:12px">
+        <div class="tyre-row" style="padding:14px 16px">
+          <div class="tyre-thumb"></div>
+          <div class="tyre-meta">
+            <div class="nm">${t.name}</div>
+            <div class="bk">${t.line}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="display" style="font-weight:700;font-size:16px">${t.price.toFixed(2).replace('.',',')} €</div>
+            <button class="btn btn-primary btn-sm" style="margin-top:6px" onclick="buy('${k}')">Acheter</button>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+/* ============ CHECKOUT ============ */
+function buy(key){ state.cart=key; nav('checkout'); }
+function renderCheckout(){
+  const t=TYRES[state.cart];
+  const retailers=[
+    {n:'Alltricks',st:'En stock',d:'Livraison 24-48h',p:t.price},
+    {n:'Probikeshop',st:'En stock',d:'Livraison 48h',p:t.price+1.10},
+    {n:'Bike-Discount',st:'En stock',d:'Livraison 3-4j',p:t.price-2.00},
+    {n:'Decathlon',st:'En stock',d:'Retrait 1h',p:t.price+2.00},
+  ];
+  screen().innerHTML=`
+  <div class="pad">
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:14px" onclick="history.back?nav('shop'):nav('shop')">← Retour</button>
+    <div class="journey">
+      <div class="step done"><div class="c">✓</div><div class="l">Intérêt</div></div>
+      <div class="ln"></div>
+      <div class="step now"><div class="c">2</div><div class="l">Clic</div></div>
+      <div class="ln"></div>
+      <div class="step"><div class="c">3</div><div class="l">Achat</div></div>
+    </div>
+
+    <div class="card" style="padding:16px;margin-bottom:16px;display:flex;gap:14px;align-items:center">
+      <div class="tyre-thumb"></div>
+      <div style="flex:1">
+        <div class="display" style="font-weight:700;font-size:17px">${t.name}</div>
+        <div style="font-size:12.5px;color:var(--grey)">${t.line}</div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin-bottom:10px">Choisis ton e-revendeur</div>
+    <div class="card">
+      ${retailers.map(r=>`
+        <div class="retailer">
+          <div class="r-logo">${r.n[0]}</div>
+          <div class="r-meta">
+            <div class="nm">${r.n}</div>
+            <div class="st"><span class="dot" style="background:var(--green)"></span>${r.st} · ${r.d}</div>
+          </div>
+          <div class="r-price">
+            <div class="p">${r.p.toFixed(2).replace('.',',')} €</div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <button class="btn btn-yellow" style="margin-top:18px" onclick="nav('success')">
+      Acheter chez Alltricks — ${t.price.toFixed(2).replace('.',',')} €
+    </button>
+    <p style="text-align:center;font-size:11.5px;color:var(--grey);margin-top:10px">Paiement sécurisé · redirection e-revendeur partenaire</p>
+  </div>`;
+}
+function renderSuccess(){
+  const t=TYRES[state.cart];
+  // mark wear reset if it was in garage
+  const g=state.garage.find(x=>x.tyre===state.cart);
+  screen().innerHTML=`
+  <div class="success-wrap">
+    <div class="success-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <h1 class="title" style="font-size:24px">Commande confirmée</h1>
+    <p class="sub" style="max-width:280px;margin-top:6px">Ton ${t.name} arrive. On a mis à jour ton garage et remis le compteur d'usure à zéro.</p>
+    <div class="card" style="margin-top:22px;padding:16px;width:100%;text-align:left">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:var(--grey)">Produit</span><b>${t.name}</b></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:var(--grey)">e-revendeur</span><b>Alltricks</b></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px"><span style="color:var(--grey)">Livraison</span><b>24-48h</b></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px;border-top:1px solid var(--line);padding-top:10px;margin-top:4px"><span>Total</span><b class="display">${t.price.toFixed(2).replace('.',',')} €</b></div>
+    </div>
+    <div class="reward" style="margin-top:16px">★ +120 points Trace gagnés</div>
+    <button class="btn btn-primary" style="margin-top:22px" onclick="nav('garage')">Voir mon garage</button>
+  </div>`;
+  if(g){ g.wear=2; g.km=0; }
+}
+
+/* ============ COMMUNITY ============ */
+function feedCard(theme,tag,title,desc,reward){
+  return `
+  <div class="card feed-card">
+    <div class="feed-img ${theme==='road'?'':theme}"><span class="feed-tag">${tag}</span></div>
+    <div class="feed-body">
+      <h4>${title}</h4>
+      <p>${desc}</p>
+      <div class="feed-foot">
+        <span class="reward">★ ${reward}</span>
+        <button class="btn btn-primary btn-sm" onclick="nav('match')">Participer</button>
+      </div>
+    </div>
+  </div>`;
+}
+function renderRide(){
+  screen().innerHTML=`
+  <div class="pad">
+    <div class="eyebrow">Communauté Trace</div>
+    <h1 class="title">Roule. Gagne. Recommande.</h1>
+    <p class="sub">Défis, segments et contenus qui transforment tes km en avantages Michelin.</p>
+    <div style="height:18px"></div>
+    ${feedCard('road','Défi du mois','300 km de printemps',"Boucle 300 km et débloque -15% sur ta prochaine gomme route + un dossard offert.",'+50 pts · -15%')}
+    ${feedCard('gravel','Segment','Les Crêtes — Gravel',"Le segment sponsorisé Michelin Power Gravel. Top 100 ce mois = échantillon offert.",'+80 pts')}
+    ${feedCard('mtb','Pro Story','Réglages d\\'enduro',"Comment les athlètes Michelin choisissent leur pression selon le terrain.",'Lecture · +10 pts')}
+  </div>`;
+}
+
+/* ============ BOOT ============ */
+render('home');
+</script>
+</body>
+</html>

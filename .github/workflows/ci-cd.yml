@@ -1,0 +1,57 @@
+name: CI/CD — TRACE
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Lint & Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Backend — installer les dépendances
+        working-directory: backend
+        run: npm install
+      - name: Backend — tests unitaires & intégration
+        working-directory: backend
+        run: npm test
+      - name: Frontend — installer & build
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+  build:
+    name: Build images Docker
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image API
+        run: docker build -t trace-api ./backend
+      - name: Build image Web
+        run: docker build -t trace-web ./frontend
+
+  deploy:
+    name: Déploiement
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      # Exemple : déploiement sur Render via un Deploy Hook.
+      # Configurer le secret RENDER_DEPLOY_HOOK dans Settings > Secrets.
+      - name: Déclencher le déploiement
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+            echo "Déploiement déclenché."
+          else
+            echo "Aucun deploy hook configuré — étape ignorée."
+          fi
