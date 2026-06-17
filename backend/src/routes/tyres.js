@@ -38,6 +38,27 @@ module.exports = (pool) => {
     } catch (e) { next(e); }
   });
 
+  // Supprimer un vélo (cascade sur bike_tyres)
+  router.delete('/bikes/:bikeId', async (req, res, next) => {
+    try {
+      await pool.query('DELETE FROM bikes WHERE id = $1', [req.params.bikeId]);
+      res.json({ ok: true });
+    } catch (e) { next(e); }
+  });
+
+  // Monter un pneu sur un vélo (remplace le pneu existant)
+  router.post('/garage/mount', async (req, res, next) => {
+    try {
+      const { bikeId, tyreId } = req.body;
+      await pool.query('DELETE FROM bike_tyres WHERE bike_id = $1', [bikeId]);
+      const { rows } = await pool.query(
+        'INSERT INTO bike_tyres (bike_id, tyre_id, km_ridden) VALUES ($1, $2, 0) RETURNING *',
+        [bikeId, tyreId]
+      );
+      res.status(201).json(rows[0]);
+    } catch (e) { next(e); }
+  });
+
   // Garage : vélos + pneus + usure (LEFT JOIN pour inclure les vélos sans pneu)
   router.get('/garage/:userId', async (req, res, next) => {
     try {

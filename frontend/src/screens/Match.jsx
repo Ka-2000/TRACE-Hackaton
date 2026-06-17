@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { api } from '../api.js';
 import { QUESTIONS, SPECS, euro } from '../data.js';
 
-export default function Match({ buy }) {
+export default function Match({ buy, go, matchBikeId, onMounted }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [mounting, setMounting] = useState(false);
 
   const pick = (key, val) => {
     const next = { ...answers, [key]: val };
@@ -24,6 +25,17 @@ export default function Match({ buy }) {
   };
 
   const restart = () => { setStep(0); setAnswers({}); setResult(null); };
+
+  const mountTyre = async (tyreId) => {
+    setMounting(true);
+    try {
+      await api.mountTyre(matchBikeId, tyreId);
+      onMounted();
+      go('garage');
+    } catch {
+      setMounting(false);
+    }
+  };
 
   if (loading) return <div className="loading">On cherche ta gomme idéale…</div>;
 
@@ -55,7 +67,19 @@ export default function Match({ buy }) {
             <button className="btn btn-yellow" style={{ width: 'auto', padding: '14px 22px' }} onClick={() => buy({ tyre_id: t.id, name: t.name, line: t.line, price: t.price })}>Acheter</button>
           </div>
         </div>
-        <button className="btn btn-ghost" style={{ marginTop: 14 }} onClick={restart}>Recommencer le test</button>
+
+        {matchBikeId && (
+          <button
+            className="btn btn-yellow"
+            style={{ marginTop: 12 }}
+            disabled={mounting}
+            onClick={() => mountTyre(t.id)}
+          >
+            {mounting ? 'Montage…' : 'Monter ce pneu sur mon vélo'}
+          </button>
+        )}
+
+        <button className="btn btn-ghost" style={{ marginTop: 12 }} onClick={restart}>Recommencer le test</button>
       </div>
     );
   }
