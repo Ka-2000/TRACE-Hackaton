@@ -6,7 +6,7 @@ const CHALLENGES = [
   { id: 'enduro-story', tag: 'Pro Story', title: "Réglages d'enduro", desc: 'Comment les athlètes Michelin choisissent leur pression selon le terrain.', reward: 'Lecture · +10 pts', points: 10, theme: 'mtb' },
 ];
 
-export default function Community({ go, joinChallenge }) {
+export default function Community({ go, joinChallenge, joinedChallenges }) {
   return (
     <div className="pad">
       <div className="eyebrow">Communauté Trace</div>
@@ -21,6 +21,7 @@ export default function Community({ go, joinChallenge }) {
           title={c.title}
           desc={c.desc}
           reward={c.reward}
+          alreadyJoined={joinedChallenges.has(c.id)}
           onAction={() => joinChallenge(c)}
         />
       ))}

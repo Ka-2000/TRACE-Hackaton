@@ -31,7 +31,7 @@ export default function App() {
   const onChallengeJoined = useCallback((id) => setJoinedChallenges((prev) => new Set([...prev, id])), []);
 
   const screens = {
-    home: <Home go={go} buy={buy} joinChallenge={joinChallenge} />,
+    home: <Home go={go} buy={buy} joinChallenge={joinChallenge} joinedChallenges={joinedChallenges} />,
     garage: <Garage go={go} buy={buy} mountOnBike={mountOnBike} />,
     addbike: <AddBike go={go} />,
     match: <Match go={go} buy={buy} matchBikeId={matchBikeId} onMounted={() => setMatchBikeId(null)} />,
@@ -40,7 +40,7 @@ export default function App() {
     shop: <Shop buy={buy} />,
     checkout: <Checkout cart={cart} go={go} />,
     success: <Success cart={cart} go={go} />,
-    community: <Community go={go} joinChallenge={joinChallenge} />,
+    community: <Community go={go} joinChallenge={joinChallenge} joinedChallenges={joinedChallenges} />,
   };
 
   const NavBtn = ({ id, label }) => (

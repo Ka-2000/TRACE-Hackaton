@@ -3,7 +3,6 @@ import { api } from '../api.js';
 
 export default function Challenge({ challenge, go, alreadyJoined, onJoined }) {
   const [loading, setLoading] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [joined, setJoined] = useState(false);
 
   if (!challenge) {
@@ -12,10 +11,6 @@ export default function Challenge({ challenge, go, alreadyJoined, onJoined }) {
   }
 
   const join = async () => {
-    if (alreadyJoined) {
-      setShowAlert(true);
-      return;
-    }
     setLoading(true);
     try {
       await api.joinChallenge(challenge.id, challenge.points);
@@ -54,24 +49,6 @@ export default function Challenge({ challenge, go, alreadyJoined, onJoined }) {
         </div>
         <div style={{ fontSize: 18, fontWeight: 700 }}>★ {challenge.reward}</div>
       </div>
-
-      {showAlert && (
-        <div style={{
-          background: '#FFF3CD',
-          border: '1.5px solid #F5C842',
-          borderRadius: 10,
-          padding: '12px 16px',
-          marginBottom: 14,
-          fontSize: 14,
-          color: '#7A5800',
-          fontWeight: 500,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}>
-          ⚠ Tu es déjà inscrit à ce défi !
-        </div>
-      )}
 
       <button
         className="btn btn-yellow"
