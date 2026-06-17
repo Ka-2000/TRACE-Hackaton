@@ -3,7 +3,7 @@ import { api } from '../api.js';
 import { euro } from '../data.js';
 import FeedCard from '../components/FeedCard.jsx';
 
-export default function Home({ go, buy }) {
+export default function Home({ go, buy, joinChallenge }) {
   const [alert, setAlert] = useState(null);
   const [km, setKm] = useState(null);
 
@@ -40,7 +40,7 @@ export default function Home({ go, buy }) {
       )}
 
       <div className="section-h"><h3>Découvre</h3><a onClick={() => go('community')}>Tout voir</a></div>
-      <FeedCard tag="Défi" title="Challenge Printemps" desc="Roule 300 km ce mois-ci et débloque -15% sur ta prochaine gomme route." reward="+50 pts" onAction={() => go('match')} />
+      <FeedCard tag="Défi" title="Challenge Printemps" desc="Roule 300 km ce mois-ci et débloque -15% sur ta prochaine gomme route." reward="+50 pts" onAction={() => joinChallenge({ id: 'spring300', tag: 'Défi', title: 'Challenge Printemps', desc: 'Roule 300 km ce mois-ci et débloque -15% sur ta prochaine gomme route.', reward: '+50 pts', points: 50 })} />
     </div>
   );
 }

@@ -22,6 +22,18 @@ export const api = {
     method: 'POST',
     body: JSON.stringify({ userId: DEMO_USER, ...payload }),
   }),
+  addBike: (name, discipline) => req('/api/bikes', {
+    method: 'POST',
+    body: JSON.stringify({ userId: DEMO_USER, name, discipline }),
+  }),
+  logRide: (bikeId, km) => req('/api/rides', {
+    method: 'POST',
+    body: JSON.stringify({ userId: DEMO_USER, bikeId, km }),
+  }),
+  joinChallenge: (challengeId, points) => req('/api/challenges/join', {
+    method: 'POST',
+    body: JSON.stringify({ userId: DEMO_USER, challengeId, points }),
+  }),
 };
 
 export { DEMO_USER };

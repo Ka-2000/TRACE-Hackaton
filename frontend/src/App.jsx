@@ -1,7 +1,10 @@
 import { useState, useCallback } from 'react';
 import Home from './screens/Home.jsx';
 import Garage from './screens/Garage.jsx';
+import AddBike from './screens/AddBike.jsx';
 import Match from './screens/Match.jsx';
+import LogRide from './screens/LogRide.jsx';
+import Challenge from './screens/Challenge.jsx';
 import Shop from './screens/Shop.jsx';
 import Checkout from './screens/Checkout.jsx';
 import Success from './screens/Success.jsx';
@@ -17,19 +20,23 @@ const ICONS = {
 export default function App() {
   const [view, setView] = useState('home');
   const [cart, setCart] = useState(null);
+  const [challenge, setChallenge] = useState(null);
 
   const go = useCallback((v) => setView(v), []);
-  // cart attendu : { tyre_id, name, line, price, bikeTyreId? }
   const buy = useCallback((item) => { setCart(item); setView('checkout'); }, []);
+  const joinChallenge = useCallback((c) => { setChallenge(c); setView('challenge'); }, []);
 
   const screens = {
-    home: <Home go={go} buy={buy} />,
+    home: <Home go={go} buy={buy} joinChallenge={joinChallenge} />,
     garage: <Garage go={go} buy={buy} />,
+    addbike: <AddBike go={go} />,
     match: <Match go={go} buy={buy} />,
+    logride: <LogRide go={go} />,
+    challenge: <Challenge challenge={challenge} go={go} />,
     shop: <Shop buy={buy} />,
     checkout: <Checkout cart={cart} go={go} />,
     success: <Success cart={cart} go={go} />,
-    community: <Community go={go} />,
+    community: <Community go={go} joinChallenge={joinChallenge} />,
   };
 
   const NavBtn = ({ id, label }) => (
@@ -53,7 +60,7 @@ export default function App() {
       <nav className="nav">
         <NavBtn id="home" label="Accueil" />
         <NavBtn id="garage" label="Garage" />
-        <button className="fab" onClick={() => go('match')} aria-label="Trouver mon pneu">
+        <button className="fab" onClick={() => go('logride')} aria-label="Loguer une sortie">
           <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
         </button>
         <NavBtn id="shop" label="Boutique" />
