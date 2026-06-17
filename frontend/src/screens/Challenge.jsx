@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { api } from '../api.js';
 
-export default function Challenge({ challenge, go }) {
+export default function Challenge({ challenge, go, alreadyJoined, onJoined }) {
   const [loading, setLoading] = useState(false);
-  const [joined, setJoined] = useState(false);
 
   if (!challenge) {
     go('community');
@@ -15,11 +14,11 @@ export default function Challenge({ challenge, go }) {
     try {
       await api.joinChallenge(challenge.id, challenge.points);
     } catch {}
-    setJoined(true);
+    onJoined(challenge.id);
     setLoading(false);
   };
 
-  if (joined) {
+  if (alreadyJoined) {
     return (
       <div className="pad" style={{ textAlign: 'center', paddingTop: 48 }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>🏆</div>

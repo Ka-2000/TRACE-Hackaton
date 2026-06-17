@@ -22,11 +22,13 @@ export default function App() {
   const [cart, setCart] = useState(null);
   const [challenge, setChallenge] = useState(null);
   const [matchBikeId, setMatchBikeId] = useState(null);
+  const [joinedChallenges, setJoinedChallenges] = useState(new Set());
 
   const go = useCallback((v) => setView(v), []);
   const buy = useCallback((item) => { setCart(item); setView('checkout'); }, []);
   const joinChallenge = useCallback((c) => { setChallenge(c); setView('challenge'); }, []);
   const mountOnBike = useCallback((bikeId) => { setMatchBikeId(bikeId); setView('match'); }, []);
+  const onChallengeJoined = useCallback((id) => setJoinedChallenges((prev) => new Set([...prev, id])), []);
 
   const screens = {
     home: <Home go={go} buy={buy} joinChallenge={joinChallenge} />,
@@ -34,7 +36,7 @@ export default function App() {
     addbike: <AddBike go={go} />,
     match: <Match go={go} buy={buy} matchBikeId={matchBikeId} onMounted={() => setMatchBikeId(null)} />,
     logride: <LogRide go={go} />,
-    challenge: <Challenge challenge={challenge} go={go} />,
+    challenge: <Challenge challenge={challenge} go={go} alreadyJoined={challenge && joinedChallenges.has(challenge.id)} onJoined={onChallengeJoined} />,
     shop: <Shop buy={buy} />,
     checkout: <Checkout cart={cart} go={go} />,
     success: <Success cart={cart} go={go} />,
