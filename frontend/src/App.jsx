@@ -21,16 +21,18 @@ export default function App() {
   const [view, setView] = useState('home');
   const [cart, setCart] = useState(null);
   const [challenge, setChallenge] = useState(null);
+  const [matchBikeId, setMatchBikeId] = useState(null);
 
   const go = useCallback((v) => setView(v), []);
   const buy = useCallback((item) => { setCart(item); setView('checkout'); }, []);
   const joinChallenge = useCallback((c) => { setChallenge(c); setView('challenge'); }, []);
+  const mountOnBike = useCallback((bikeId) => { setMatchBikeId(bikeId); setView('match'); }, []);
 
   const screens = {
     home: <Home go={go} buy={buy} joinChallenge={joinChallenge} />,
-    garage: <Garage go={go} buy={buy} />,
+    garage: <Garage go={go} buy={buy} mountOnBike={mountOnBike} />,
     addbike: <AddBike go={go} />,
-    match: <Match go={go} buy={buy} />,
+    match: <Match go={go} buy={buy} matchBikeId={matchBikeId} onMounted={() => setMatchBikeId(null)} />,
     logride: <LogRide go={go} />,
     challenge: <Challenge challenge={challenge} go={go} />,
     shop: <Shop buy={buy} />,

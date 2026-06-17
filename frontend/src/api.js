@@ -26,6 +26,11 @@ export const api = {
     method: 'POST',
     body: JSON.stringify({ userId: DEMO_USER, name, discipline }),
   }),
+  deleteBike: (bikeId) => req(`/api/bikes/${bikeId}`, { method: 'DELETE' }),
+  mountTyre: (bikeId, tyreId) => req('/api/garage/mount', {
+    method: 'POST',
+    body: JSON.stringify({ bikeId, tyreId }),
+  }),
   logRide: (bikeId, km) => req('/api/rides', {
     method: 'POST',
     body: JSON.stringify({ userId: DEMO_USER, bikeId, km }),
