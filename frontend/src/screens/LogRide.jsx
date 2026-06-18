@@ -109,7 +109,6 @@ export default function LogRide({ go }) {
           <input
             type="number"
             min="1"
-            max="500"
             value={km}
             onChange={(e) => setKm(e.target.value)}
             placeholder="ex : 45"
